@@ -2490,6 +2490,44 @@ define Device/planex_vr500
 endef
 TARGET_DEVICES += planex_vr500
 
+define Device/pplink_s21_16m
+  $(Device/dsa-migration)
+  $(Device/uimage-lzma-loader)
+  IMAGE_SIZE := 16064k
+  DEVICE_VENDOR := PP-LINK
+  DEVICE_MODEL := S21
+  DEVICE_VARIANT := 16M
+  DEVICE_DTS := mt7621_pplink_s21-16m
+  DEVICE_PACKAGES += \
+	$(DEFAULT_PACKAGES) \
+	kmod-mt7915e \
+	kmod-mt7915-firmware \
+	wpad-openssl \
+	luci-app-wireless \
+	-uboot-envtools
+  SUPPORTED_DEVICES += pplink,s21-16m
+endef
+TARGET_DEVICES += pplink_s21_16m
+
+define Device/pplink_s21_32m
+  $(Device/dsa-migration)
+  $(Device/uimage-lzma-loader)
+  IMAGE_SIZE := 32384k
+  DEVICE_VENDOR := PP-LINK
+  DEVICE_MODEL := S21
+  DEVICE_VARIANT := 32M
+  DEVICE_DTS := mt7621_pplink_s21-32m
+  DEVICE_PACKAGES += \
+	$(DEFAULT_PACKAGES) \
+	kmod-mt7915e \
+	kmod-mt7915-firmware \
+	wpad-openssl \
+	luci-app-wireless \
+	-uboot-envtools
+  SUPPORTED_DEVICES += pplink,s21-32m
+endef
+TARGET_DEVICES += pplink_s21_32m
+
 define Device/raisecom_msg1500-x-00
   $(Device/nand)
   $(Device/uimage-lzma-loader)
