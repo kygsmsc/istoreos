@@ -1,0 +1,10 @@
+#include "mt7621_pplink_s21.dtsi"
+
+/ {
+	compatible = "pplink,s21-16m", "mediatek,mt7621-soc";
+	model = "PP-LINK S21 (16M SPI NOR)";
+};
+
+&firmware {
+	reg = <0x50000 0xfb0000>;
+};
