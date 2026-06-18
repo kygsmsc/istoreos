@@ -5,7 +5,6 @@
 #include <dt-bindings/leds/common.h>
 
 / {
-
 	aliases {
 		led-boot = &led_internet_blue;
 		led-failsafe = &led_internet_red;
@@ -41,7 +40,6 @@
 			gpios = <&gpio 24 GPIO_ACTIVE_LOW>;
 		};
 	};
-
 };
 
 &i2c {
@@ -89,17 +87,12 @@
 
 					eeprom_factory_0: eeprom@0 {
 						reg = <0x0 0xe00>;
-						// 原有修改：补全4KB完整EEPROM，适配2.4G/5G双射频
 					};
 
 					eeprom_factory_800: eeprom@800 {
 						reg = <0x800 0xe00>;
 					};
-					wifimac_factory_4: macaddr@4 {
-						reg = <0x4 0x6>;
-						// 原有修改：修正WiFi MAC偏移
-					};
-				
+
 					macaddr_factory_e000: macaddr@e000 {
 						reg = <0xe000 0x6>;
 					};
@@ -125,22 +118,10 @@
 &pcie0 {
 	status = "okay";
 };
-/*
+
 &pcie1 {
 	status = "okay";
-	// 原有修改：强制开启PCIe1控制器
 
-	wifi0: wifi@0,0 {
-		compatible = "mediatek,mt7915e";
-		reg = <0x0000 0 0 0 0>;
-		nvmem-cells = <&eeprom_factory_0>, <&wifimac_factory_4>;
-		nvmem-cell-names = "eeprom", "mac-address";
-		mediatek,disable-radar-background;
-		
-	};
-};
-*/
-&pcie1 {
 	wifi@0,0 {
 		compatible = "mediatek,mt76";
 		reg = <0x0000 0 0 0 0>;
@@ -149,7 +130,17 @@
 		mediatek,disable-radar-background;
 	};
 };
+
+/*
+ * ✅ 必须保留，否则 Kernel 6.6 下 PCIe 总线可能异常
+ */
+&pcie2 {
+	status = "okay";
+};
+
 &ethernet {
+	status = "okay";
+	pinctrl-names = "default";
 	pinctrl-0 = <&mdio_pins>, <&rgmii1_pins>;
 };
 
@@ -158,11 +149,8 @@
 	nvmem-cell-names = "mac-address";
 };
 
-
 &switch0 {
-	
 	ports {
-
 		port@0 {
 			status = "okay";
 			label = "lan1";
@@ -182,11 +170,19 @@
 			status = "okay";
 			label = "lan4";
 		};
+
 		port@4 {
 			status = "okay";
 			label = "wan";
 			nvmem-cells = <&macaddr_factory_e006>;
 			nvmem-cell-names = "mac-address";
+		};
+
+		port@6 {
+			status = "okay";
+			label = "cpu";
+			ethernet = <&gmac0>;
+			phy-mode = "rgmii";
 		};
 	};
 };
